@@ -1,0 +1,30 @@
+{
+  "name": "zhipuai-sdk-nodejs-v4",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./lib/index",
+  "typings": "./type/index.d.ts",
+  "scripts": {
+    "build": "tsc && yarn build-cjs",
+    "build-cjs": "tsc --module commonjs --outDir ./dist/cjs",
+    "test": "node ./test/test.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./type/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.11.16",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
