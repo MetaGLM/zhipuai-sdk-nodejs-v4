@@ -1,10 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const assert_1 = tslib_1.__importDefault(require("assert"));
+const assert_1 = __importDefault(require("assert"));
 const jwt_1 = require("./jwt");
-const axios_1 = tslib_1.__importDefault(require("axios"));
-const completions_1 = tslib_1.__importDefault(require("./completions"));
+const axios_1 = __importDefault(require("axios"));
+const completions_1 = __importDefault(require("./completions"));
 class ZhipuAI {
     options;
     request;
