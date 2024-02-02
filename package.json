@@ -17,6 +17,9 @@
     },
     "./package.json": "./package.json"
   },
+  "repository": {
+    "url": "https://github.com/winily/zhipuai-sdk-nodejs-v4"
+  },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.16",
