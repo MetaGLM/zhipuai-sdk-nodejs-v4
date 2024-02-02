@@ -1,6 +1,6 @@
 {
   "name": "zhipuai-sdk-nodejs-v4",
-  "version": "0.0.2",
+  "version": "0.1.3",
   "license": "MIT",
   "main": "./lib/index",
   "typings": "./type/index.d.ts",
