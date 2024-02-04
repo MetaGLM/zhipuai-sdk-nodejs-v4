@@ -15,7 +15,11 @@ yarn add zhipuai-sdk-nodejs-v4
 
 ## 使用
 
-使用 apiKey 创建 Client 然后再调用 createCompletions 来快速创建一个对话
+使用 apiKey 创建 Client，大部分操作都在这里进行
+
+### 创建一个对话
+
+调用 createCompletions 来快速创建一个对话
 
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
@@ -41,4 +45,26 @@ const dialogue = async () => {
 }
 
 dialogue()
+```
+
+### 生成一个图片
+
+调用 createImages 来快速生成一个图片
+
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+
+const createIamge = async () => {
+    const ai = new ZhipuAI({
+        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
+        apiKey: ''
+    })
+    const result = await ai.createImages({
+        model: "cogview-3",
+        prompt: "一只可爱的小猫咪"
+    })
+    console.log(result.data, "image url list")
+}
+
+createIamge()
 ```
