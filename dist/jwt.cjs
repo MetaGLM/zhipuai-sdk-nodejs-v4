@@ -26,14 +26,16 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// lib/jwt.ts
 var jwt_exports = {};
 __export(jwt_exports, {
   generateToken: () => generateToken
 });
 module.exports = __toCommonJS(jwt_exports);
 var import_jsonwebtoken = __toESM(require("jsonwebtoken"), 1);
-const API_TOKEN_TTL_SECONDS = 3 * 60;
-const generateToken = (apiKey) => {
+var API_TOKEN_TTL_SECONDS = 3 * 60;
+var generateToken = (apiKey) => {
   try {
     const [api_key, secret] = apiKey.split(".");
     const payload = {
@@ -50,4 +52,8 @@ const generateToken = (apiKey) => {
     throw "invalid api_key";
   }
 };
-//# sourceMappingURL=jwt.js.map
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  generateToken
+});
+//# sourceMappingURL=jwt.cjs.map

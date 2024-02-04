@@ -1,7 +1,7 @@
-"use strict";
+// lib/jwt.ts
 import jsonwebtoken from "jsonwebtoken";
-const API_TOKEN_TTL_SECONDS = 3 * 60;
-export const generateToken = (apiKey) => {
+var API_TOKEN_TTL_SECONDS = 3 * 60;
+var generateToken = (apiKey) => {
   try {
     const [api_key, secret] = apiKey.split(".");
     const payload = {
@@ -17,5 +17,8 @@ export const generateToken = (apiKey) => {
   } catch (e) {
     throw "invalid api_key";
   }
+};
+export {
+  generateToken
 };
 //# sourceMappingURL=jwt.js.map
