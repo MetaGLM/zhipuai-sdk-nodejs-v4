@@ -1,11 +1,11 @@
 // lib/jwt.ts
 import jsonwebtoken from "jsonwebtoken";
 var API_TOKEN_TTL_SECONDS = 3 * 60;
-var generateToken = (apiKey) => {
+var generateToken = (apiSecretKey) => {
   try {
-    const [api_key, secret] = apiKey.split(".");
+    const [apiKey, secret] = apiSecretKey.split(".");
     const payload = {
-      "api_key": api_key,
+      "api_key": apiKey,
       "exp": Math.round(Date.now() * 1e3) + API_TOKEN_TTL_SECONDS * 1e3,
       "timestamp": Math.round(Date.now() * 1e3)
     };

@@ -1,3 +1,3 @@
-declare const generateToken: (apiKey: string) => never;
+declare const generateToken: (apiSecretKey: string) => never;
 
 export { generateToken };

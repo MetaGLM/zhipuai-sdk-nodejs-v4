@@ -51,20 +51,20 @@ var Completions = class {
     return __async(this, null, function* () {
       return this.app.post("/chat/completions", {
         "model": options.model,
-        "request_id": options.request_id,
+        "request_id": options.requestId,
         "temperature": options.temperature,
-        "top_p": options.top_p,
-        "do_sample": options.do_sample,
-        "max_tokens": options.max_tokens,
+        "top_p": options.topP,
+        "do_sample": options.doSample,
+        "max_tokens": options.maxTokens,
         "seed": options.seed,
         "messages": options.messages,
         "stop": options.stop,
-        "sensitive_word_check": options.sensitive_word_check,
+        "sensitive_word_check": options.sensitiveWordCheck,
         "stream": options.stream,
         "tools": options.tools,
-        "tool_choice": options.tool_choice
+        "tool_choice": options.toolChoice
       }, {
-        headers: options.extra_headers,
+        headers: options.extraHeaders,
         responseType: options.stream ? "stream" : "json"
       });
     });

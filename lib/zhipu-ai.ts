@@ -2,6 +2,7 @@ import assert from "assert"
 import { generateToken } from "./jwt.js"
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import Completions, { CreateCompletionsOptions } from "./completions.js"
+import Request from "./request.js"
 
 export type ZhipuAIOptions = {
     apiKey: string,
@@ -13,23 +14,18 @@ export type ZhipuAIOptions = {
 
 export class ZhipuAI {
     public __esModule = false
-    public request: AxiosInstance
+    public request: Request
 
     constructor(private readonly options: ZhipuAIOptions) {
         if (!options.apiKey) options.apiKey = process.env['ZHIPUAI_API_KEY'] || ''
         assert.ok(options.apiKey, "未提供api_key，请通过参数或环境变量提供")
         if (!options.baseUrl) options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || ''
         if (!options.baseUrl) options.baseUrl = "https://open.bigmodel.cn/api/paas/v4"
-        this.request = Axios.create({
-            baseURL: options.baseUrl,
+        this.request = new Request(this, {
             timeout: options.timeout,
-            headers: options.customHeaders
-        })
-
-        this.request.interceptors.request.use((config) => {
-            config.headers.set(this.authHeaders())
-            return config;
-        })
+            headers: options.customHeaders,
+            baseURL: options.baseUrl
+        });
     }
 
     public async post(url: string, data?: object, config?: AxiosRequestConfig<object>): Promise<AxiosResponse<any>> {
@@ -40,7 +36,7 @@ export class ZhipuAI {
         return new Completions(this).create(options)
     }
 
-    authHeaders() {
+    public authHeaders() {
         const token = generateToken(this.options.apiKey)
         return { "Authorization": token }
     }

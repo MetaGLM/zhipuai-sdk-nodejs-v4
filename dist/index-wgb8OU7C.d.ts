@@ -1,4 +1,14 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosInstance, CreateAxiosDefaults, AxiosResponse, AxiosRequestConfig } from 'axios';
+
+declare class Request {
+    private readonly app;
+    request: AxiosInstance;
+    constructor(app: ZhipuAI, config: CreateAxiosDefaults);
+    post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R>;
+    get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+    put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R>;
+    delete<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+}
 
 type ZhipuAIOptions = {
     apiKey: string;
@@ -10,7 +20,7 @@ type ZhipuAIOptions = {
 declare class ZhipuAI {
     private readonly options;
     __esModule: boolean;
-    request: AxiosInstance;
+    request: Request;
     constructor(options: ZhipuAIOptions);
     post(url: string, data?: object, config?: AxiosRequestConfig<object>): Promise<AxiosResponse<any>>;
     createCompletions(options: CreateCompletionsOptions): Promise<AxiosResponse<any>>;
@@ -26,19 +36,19 @@ type MessageOptions = {
 type CreateCompletionsOptions = {
     model: string;
     messages: Array<MessageOptions>;
-    request_id?: string;
-    do_sample?: boolean;
+    requestId?: string;
+    doSample?: boolean;
     stream?: boolean;
     temperature?: number;
-    top_p?: number;
-    max_tokens?: number;
+    topP?: number;
+    maxTokens?: number;
     seed?: number;
     stop?: Array<string>;
-    sensitive_word_check?: object;
+    sensitiveWordCheck?: object;
     tools?: object;
-    tool_choice?: string;
-    extra_headers?: object;
-    disable_strict_validation?: boolean;
+    toolChoice?: string;
+    extraHeaders?: object;
+    disableStrictValidation?: boolean;
     timeout?: number;
 };
 type ResponseMessage = {
@@ -85,4 +95,4 @@ declare class Completions {
     create(options: CreateCompletionsOptions): Promise<AxiosResponse<ResponseMessage>>;
 }
 
-export { Completions as C, type MessageOptions as M, type ResponseMessage as R, ZhipuAI as Z, type ZhipuAIOptions as a, type CreateCompletionsOptions as b };
+export { Completions as C, type MessageOptions as M, Request as R, ZhipuAI as Z, type ZhipuAIOptions as a, type CreateCompletionsOptions as b, type ResponseMessage as c };

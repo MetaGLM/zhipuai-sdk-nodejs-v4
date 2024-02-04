@@ -66,11 +66,11 @@ var import_assert = __toESM(require("assert"), 1);
 // lib/jwt.ts
 var import_jsonwebtoken = __toESM(require("jsonwebtoken"), 1);
 var API_TOKEN_TTL_SECONDS = 3 * 60;
-var generateToken = (apiKey) => {
+var generateToken = (apiSecretKey) => {
   try {
-    const [api_key, secret] = apiKey.split(".");
+    const [apiKey, secret] = apiSecretKey.split(".");
     const payload = {
-      "api_key": api_key,
+      "api_key": apiKey,
       "exp": Math.round(Date.now() * 1e3) + API_TOKEN_TTL_SECONDS * 1e3,
       "timestamp": Math.round(Date.now() * 1e3)
     };
@@ -84,9 +84,6 @@ var generateToken = (apiKey) => {
   }
 };
 
-// lib/zhipu-ai.ts
-var import_axios = __toESM(require("axios"), 1);
-
 // lib/completions.ts
 var Completions = class {
   constructor(app) {
@@ -96,22 +93,56 @@ var Completions = class {
     return __async(this, null, function* () {
       return this.app.post("/chat/completions", {
         "model": options.model,
-        "request_id": options.request_id,
+        "request_id": options.requestId,
         "temperature": options.temperature,
-        "top_p": options.top_p,
-        "do_sample": options.do_sample,
-        "max_tokens": options.max_tokens,
+        "top_p": options.topP,
+        "do_sample": options.doSample,
+        "max_tokens": options.maxTokens,
         "seed": options.seed,
         "messages": options.messages,
         "stop": options.stop,
-        "sensitive_word_check": options.sensitive_word_check,
+        "sensitive_word_check": options.sensitiveWordCheck,
         "stream": options.stream,
         "tools": options.tools,
-        "tool_choice": options.tool_choice
+        "tool_choice": options.toolChoice
       }, {
-        headers: options.extra_headers,
+        headers: options.extraHeaders,
         responseType: options.stream ? "stream" : "json"
       });
+    });
+  }
+};
+
+// lib/request.ts
+var import_axios = __toESM(require("axios"), 1);
+var Request = class {
+  constructor(app, config) {
+    this.app = app;
+    __publicField(this, "request");
+    this.request = import_axios.default.create(config);
+    this.request.interceptors.request.use((config2) => {
+      config2.headers.set(this.app.authHeaders());
+      return config2;
+    });
+  }
+  post(url, data, config) {
+    return __async(this, null, function* () {
+      return this.request.post(url, data, config);
+    });
+  }
+  get(url, config) {
+    return __async(this, null, function* () {
+      return this.request.get(url, config);
+    });
+  }
+  put(url, data, config) {
+    return __async(this, null, function* () {
+      return this.request.put(url, data, config);
+    });
+  }
+  delete(url, config) {
+    return __async(this, null, function* () {
+      return this.request.delete(url, config);
     });
   }
 };
@@ -129,14 +160,10 @@ var ZhipuAI = class {
       options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
     if (!options.baseUrl)
       options.baseUrl = "https://open.bigmodel.cn/api/paas/v4";
-    this.request = import_axios.default.create({
-      baseURL: options.baseUrl,
+    this.request = new Request(this, {
       timeout: options.timeout,
-      headers: options.customHeaders
-    });
-    this.request.interceptors.request.use((config) => {
-      config.headers.set(this.authHeaders());
-      return config;
+      headers: options.customHeaders,
+      baseURL: options.baseUrl
     });
   }
   post(url, data, config) {

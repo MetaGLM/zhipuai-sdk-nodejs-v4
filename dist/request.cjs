@@ -52,66 +52,12 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 
-// lib/zhipu-ai.ts
-var zhipu_ai_exports = {};
-__export(zhipu_ai_exports, {
-  ZhipuAI: () => ZhipuAI,
-  default: () => zhipu_ai_default
-});
-module.exports = __toCommonJS(zhipu_ai_exports);
-var import_assert = __toESM(require("assert"), 1);
-
-// lib/jwt.ts
-var import_jsonwebtoken = __toESM(require("jsonwebtoken"), 1);
-var API_TOKEN_TTL_SECONDS = 3 * 60;
-var generateToken = (apiSecretKey) => {
-  try {
-    const [apiKey, secret] = apiSecretKey.split(".");
-    const payload = {
-      "api_key": apiKey,
-      "exp": Math.round(Date.now() * 1e3) + API_TOKEN_TTL_SECONDS * 1e3,
-      "timestamp": Math.round(Date.now() * 1e3)
-    };
-    const ret = import_jsonwebtoken.default.sign(payload, secret, {
-      algorithm: "HS256",
-      header: { alg: "HS256", sign_type: "SIGN" }
-    });
-    return ret;
-  } catch (e) {
-    throw "invalid api_key";
-  }
-};
-
-// lib/completions.ts
-var Completions = class {
-  constructor(app) {
-    this.app = app;
-  }
-  create(options) {
-    return __async(this, null, function* () {
-      return this.app.post("/chat/completions", {
-        "model": options.model,
-        "request_id": options.requestId,
-        "temperature": options.temperature,
-        "top_p": options.topP,
-        "do_sample": options.doSample,
-        "max_tokens": options.maxTokens,
-        "seed": options.seed,
-        "messages": options.messages,
-        "stop": options.stop,
-        "sensitive_word_check": options.sensitiveWordCheck,
-        "stream": options.stream,
-        "tools": options.tools,
-        "tool_choice": options.toolChoice
-      }, {
-        headers: options.extraHeaders,
-        responseType: options.stream ? "stream" : "json"
-      });
-    });
-  }
-};
-
 // lib/request.ts
+var request_exports = {};
+__export(request_exports, {
+  default: () => Request
+});
+module.exports = __toCommonJS(request_exports);
 var import_axios = __toESM(require("axios"), 1);
 var Request = class {
   constructor(app, config) {
@@ -144,44 +90,4 @@ var Request = class {
     });
   }
 };
-
-// lib/zhipu-ai.ts
-var ZhipuAI = class {
-  constructor(options) {
-    this.options = options;
-    __publicField(this, "__esModule", false);
-    __publicField(this, "request");
-    if (!options.apiKey)
-      options.apiKey = process.env["ZHIPUAI_API_KEY"] || "";
-    import_assert.default.ok(options.apiKey, "\u672A\u63D0\u4F9Bapi_key\uFF0C\u8BF7\u901A\u8FC7\u53C2\u6570\u6216\u73AF\u5883\u53D8\u91CF\u63D0\u4F9B");
-    if (!options.baseUrl)
-      options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
-    if (!options.baseUrl)
-      options.baseUrl = "https://open.bigmodel.cn/api/paas/v4";
-    this.request = new Request(this, {
-      timeout: options.timeout,
-      headers: options.customHeaders,
-      baseURL: options.baseUrl
-    });
-  }
-  post(url, data, config) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, config);
-    });
-  }
-  createCompletions(options) {
-    return __async(this, null, function* () {
-      return new Completions(this).create(options);
-    });
-  }
-  authHeaders() {
-    const token = generateToken(this.options.apiKey);
-    return { "Authorization": token };
-  }
-};
-var zhipu_ai_default = ZhipuAI;
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  ZhipuAI
-});
-//# sourceMappingURL=zhipu-ai.cjs.map
+//# sourceMappingURL=request.cjs.map
