@@ -1,5 +1,4 @@
-import { AxiosResponse } from "axios";
-import ZhipuAI from "./zhipu-ai.js";
+import BaseApi from "./baseApi";
 
 export type MessageOptions = {
     role: "system" | "user" | "assistant" | "function"
@@ -63,12 +62,10 @@ export type CompletionsResponseMessage = {
     },
 }
 
-export default class Completions {
-    constructor(private readonly app: ZhipuAI) {
-    }
+export default class Completions extends BaseApi<CreateCompletionsOptions, CompletionsResponseMessage> {
 
-    public async create(options: CreateCompletionsOptions): Promise<AxiosResponse<CompletionsResponseMessage>> {
-        return this.app.post("/chat/completions", {
+    public async create(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage> {
+        return this.post("/chat/completions", {
             "model": options.model,
             "request_id": options.requestId,
             "temperature": options.temperature,
@@ -82,9 +79,6 @@ export default class Completions {
             "stream": options.stream,
             "tools": options.tools,
             "tool_choice": options.toolChoice,
-        }, {
-            headers: options.extraHeaders,
-            responseType: options.stream ? 'stream' : 'json'
-        })
+        }, options)
     }
 } 

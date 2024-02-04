@@ -29,7 +29,7 @@ const dialogue = async () => {
         // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
         apiKey: ''
     })
-    const result = await ai.createCompletions({
+    const data = await ai.createCompletions({
         model: "glm-4",
         messages: [
             {"role": "user", "content": "你好"},
@@ -38,10 +38,10 @@ const dialogue = async () => {
             {"role": "assistant", "content": "我叫chatGLM"},
             {"role": "user", "content": "你都可以做些什么事"}
         ],
-        // 如果为 true result.data 就是一个 stream 对象，要通过 on('data', (buffer) => void) 读取数据
+        // 如果为 true data 就是一个 stream 对象，要通过 on('data', (buffer) => void) 读取数据
         stream: false, 
     })
-    console.log(result.data, "result.data")
+    console.log(data, "message")
 }
 
 dialogue()
@@ -67,4 +67,26 @@ const createIamge = async () => {
 }
 
 createIamge()
+```
+
+### 创建向量
+
+调用 createEmbeddings 来快速创建向量
+
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+
+const createEmbeddings = async () => {
+    const ai = new ZhipuAI({
+        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
+        apiKey: ''
+    })
+    const result = await ai.createEmbeddings({
+        model: "embedding-2", 
+        input: "你好"
+    })
+    console.log(data, "embedding")
+}
+
+createEmbeddings()
 ```

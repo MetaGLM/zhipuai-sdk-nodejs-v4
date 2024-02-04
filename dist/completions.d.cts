@@ -1,2 +1,2 @@
+export { b as CompletionsResponseMessage, a as CreateCompletionsOptions, M as MessageOptions, C as default } from './index-hCfUd9Lh.cjs';
 import 'axios';
-export { e as CompletionsResponseMessage, d as CreateCompletionsOptions, M as MessageOptions, c as default } from './index-260Fevp7.cjs';

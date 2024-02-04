@@ -1,6 +1,4 @@
-import { AxiosResponse } from "axios";
-import ZhipuAI from "./zhipu-ai.js";
-
+import BaseApi from "./baseApi";
 
 export type CreateImagesOptions = {
     model: string,
@@ -20,11 +18,9 @@ export type ImagesResponse = {
     data: Array<string>
 }
 
-export default class Images {
-    constructor(private readonly app: ZhipuAI) { }
-
-    public async create(options: CreateImagesOptions): Promise<AxiosResponse<ImagesResponse>> {
-        return this.app.post("/images/generations", {
+export default class Images extends BaseApi<CreateImagesOptions, ImagesResponse> {
+    public async create(options: CreateImagesOptions): Promise<ImagesResponse> {
+        return this.post("/images/generations", {
             "prompt": options.prompt,
             "model": options.model,
             "n": options.n,
@@ -33,10 +29,6 @@ export default class Images {
             "size": options.size,
             "style": options.style,
             "user": options.user,
-        }, {
-            headers: options.extraHeaders,
-            timeout: options.timeout,
-            responseType: 'json'
-        })
+        }, options)
     }
 } 

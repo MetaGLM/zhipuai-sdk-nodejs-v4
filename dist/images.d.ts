@@ -1,2 +1,2 @@
+export { c as CreateImagesOptions, d as ImagesResponse, I as default } from './index-hCfUd9Lh.js';
 import 'axios';
-export { C as CreateImagesOptions, a as ImagesResponse, I as default } from './index-260Fevp7.js';

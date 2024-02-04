@@ -43,13 +43,31 @@ __export(completions_exports, {
   default: () => Completions
 });
 module.exports = __toCommonJS(completions_exports);
-var Completions = class {
-  constructor(app) {
-    this.app = app;
+
+// lib/baseApi.ts
+var BaseApi = class {
+  constructor(request) {
+    this.request = request;
   }
+  post(url, data, options) {
+    return __async(this, null, function* () {
+      return this.request.post(url, data, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch((err) => {
+        const data2 = err.response.data;
+        return Promise.reject(data2);
+      });
+    });
+  }
+};
+
+// lib/completions.ts
+var Completions = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.app.post("/chat/completions", {
+      return this.post("/chat/completions", {
         "model": options.model,
         "request_id": options.requestId,
         "temperature": options.temperature,
@@ -63,10 +81,7 @@ var Completions = class {
         "stream": options.stream,
         "tools": options.tools,
         "tool_choice": options.toolChoice
-      }, {
-        headers: options.extraHeaders,
-        responseType: options.stream ? "stream" : "json"
-      });
+      }, options);
     });
   }
 };

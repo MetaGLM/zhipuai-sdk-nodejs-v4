@@ -37,12 +37,12 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 
-// lib/images.ts
-var images_exports = {};
-__export(images_exports, {
-  default: () => Images
+// lib/embeddings.ts
+var embeddings_exports = {};
+__export(embeddings_exports, {
+  default: () => Embeddings
 });
-module.exports = __toCommonJS(images_exports);
+module.exports = __toCommonJS(embeddings_exports);
 
 // lib/baseApi.ts
 var BaseApi = class {
@@ -63,21 +63,18 @@ var BaseApi = class {
   }
 };
 
-// lib/images.ts
-var Images = class extends BaseApi {
+// lib/embeddings.ts
+var Embeddings = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/images/generations", {
-        "prompt": options.prompt,
+      return this.post("/embeddings", {
+        "input": options.input,
         "model": options.model,
-        "n": options.n,
-        "quality": options.quality,
-        "response_format": options.responseFormat,
-        "size": options.size,
-        "style": options.style,
-        "user": options.user
+        "encoding_format": options.encodingFormat,
+        "user": options.user,
+        "sensitive_word_check": options.sensitiveWordCheck
       }, options);
     });
   }
 };
-//# sourceMappingURL=images.cjs.map
+//# sourceMappingURL=embeddings.cjs.map

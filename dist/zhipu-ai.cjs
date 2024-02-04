@@ -82,14 +82,30 @@ var generateToken = (apiSecretKey) => {
   }
 };
 
-// lib/completions.ts
-var Completions = class {
-  constructor(app) {
-    this.app = app;
+// lib/baseApi.ts
+var BaseApi = class {
+  constructor(request) {
+    this.request = request;
   }
+  post(url, data, options) {
+    return __async(this, null, function* () {
+      return this.request.post(url, data, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch((err) => {
+        const data2 = err.response.data;
+        return Promise.reject(data2);
+      });
+    });
+  }
+};
+
+// lib/completions.ts
+var Completions = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.app.post("/chat/completions", {
+      return this.post("/chat/completions", {
         "model": options.model,
         "request_id": options.requestId,
         "temperature": options.temperature,
@@ -103,10 +119,7 @@ var Completions = class {
         "stream": options.stream,
         "tools": options.tools,
         "tool_choice": options.toolChoice
-      }, {
-        headers: options.extraHeaders,
-        responseType: options.stream ? "stream" : "json"
-      });
+      }, options);
     });
   }
 };
@@ -146,13 +159,10 @@ var Request = class {
 };
 
 // lib/images.ts
-var Images = class {
-  constructor(app) {
-    this.app = app;
-  }
+var Images = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.app.post("/images/generations", {
+      return this.post("/images/generations", {
         "prompt": options.prompt,
         "model": options.model,
         "n": options.n,
@@ -161,11 +171,22 @@ var Images = class {
         "size": options.size,
         "style": options.style,
         "user": options.user
-      }, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: "json"
-      });
+      }, options);
+    });
+  }
+};
+
+// lib/embeddings.ts
+var Embeddings = class extends BaseApi {
+  create(options) {
+    return __async(this, null, function* () {
+      return this.post("/embeddings", {
+        "input": options.input,
+        "model": options.model,
+        "encoding_format": options.encodingFormat,
+        "user": options.user,
+        "sensitive_word_check": options.sensitiveWordCheck
+      }, options);
     });
   }
 };
@@ -189,19 +210,19 @@ var ZhipuAI = class {
       baseURL: options.baseUrl
     });
   }
-  post(url, data, config) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, config);
-    });
-  }
   createCompletions(options) {
     return __async(this, null, function* () {
-      return new Completions(this).create(options);
+      return new Completions(this.request).create(options);
     });
   }
   createImages(options) {
     return __async(this, null, function* () {
-      return new Images(this).create(options);
+      return new Images(this.request).create(options);
+    });
+  }
+  createEmbeddings(options) {
+    return __async(this, null, function* () {
+      return new Embeddings(this.request).create(options);
     });
   }
   authHeaders() {

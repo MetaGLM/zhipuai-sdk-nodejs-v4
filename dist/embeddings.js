@@ -38,29 +38,21 @@ var BaseApi = class {
   }
 };
 
-// lib/completions.ts
-var Completions = class extends BaseApi {
+// lib/embeddings.ts
+var Embeddings = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/chat/completions", {
+      return this.post("/embeddings", {
+        "input": options.input,
         "model": options.model,
-        "request_id": options.requestId,
-        "temperature": options.temperature,
-        "top_p": options.topP,
-        "do_sample": options.doSample,
-        "max_tokens": options.maxTokens,
-        "seed": options.seed,
-        "messages": options.messages,
-        "stop": options.stop,
-        "sensitive_word_check": options.sensitiveWordCheck,
-        "stream": options.stream,
-        "tools": options.tools,
-        "tool_choice": options.toolChoice
+        "encoding_format": options.encodingFormat,
+        "user": options.user,
+        "sensitive_word_check": options.sensitiveWordCheck
       }, options);
     });
   }
 };
 export {
-  Completions as default
+  Embeddings as default
 };
-//# sourceMappingURL=completions.js.map
+//# sourceMappingURL=embeddings.js.map

@@ -1,9 +1,9 @@
 import assert from "assert"
 import { generateToken } from "./jwt.js"
-import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import Completions, { CompletionsResponseMessage, CreateCompletionsOptions } from "./completions.js"
 import Request from "./request.js"
 import Images, { CreateImagesOptions, ImagesResponse } from "./images.js"
+import Embeddings, { CreateEmbeddingsOptions, EmbeddingsResponse } from "./embeddings.js"
 
 export type ZhipuAIOptions = {
     apiKey: string,
@@ -29,16 +29,16 @@ export class ZhipuAI {
         });
     }
 
-    public async post(url: string, data?: object, config?: AxiosRequestConfig<object>): Promise<AxiosResponse<any>> {
-        return this.request.post(url, data, config)
+    public async createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage> {
+        return new Completions(this.request).create(options)
     }
 
-    public async createCompletions(options: CreateCompletionsOptions): Promise<AxiosResponse<CompletionsResponseMessage>> {
-        return new Completions(this).create(options)
+    public async createImages(options: CreateImagesOptions): Promise<ImagesResponse> {
+        return new Images(this.request).create(options)
     }
 
-    public async createImages(options: CreateImagesOptions): Promise<AxiosResponse<ImagesResponse>> {
-        return new Images(this).create(options)
+    public async createEmbeddings(options: CreateEmbeddingsOptions): Promise<EmbeddingsResponse> {
+        return new Embeddings(this.request).create(options)
     }
 
     public authHeaders() {

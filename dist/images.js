@@ -19,14 +19,30 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 
-// lib/images.ts
-var Images = class {
-  constructor(app) {
-    this.app = app;
+// lib/baseApi.ts
+var BaseApi = class {
+  constructor(request) {
+    this.request = request;
   }
+  post(url, data, options) {
+    return __async(this, null, function* () {
+      return this.request.post(url, data, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch((err) => {
+        const data2 = err.response.data;
+        return Promise.reject(data2);
+      });
+    });
+  }
+};
+
+// lib/images.ts
+var Images = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.app.post("/images/generations", {
+      return this.post("/images/generations", {
         "prompt": options.prompt,
         "model": options.model,
         "n": options.n,
@@ -35,11 +51,7 @@ var Images = class {
         "size": options.size,
         "style": options.style,
         "user": options.user
-      }, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: "json"
-      });
+      }, options);
     });
   }
 };
