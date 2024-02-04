@@ -9,19 +9,19 @@ export type MessageOptions = {
 export type CreateCompletionsOptions = {
     model: string,
     messages: Array<MessageOptions>,
-    request_id?: string,
-    do_sample?: boolean,
+    requestId?: string,
+    doSample?: boolean,
     stream?: boolean,
     temperature?: number,
-    top_p?: number,
-    max_tokens?: number,
+    topP?: number,
+    maxTokens?: number,
     seed?: number,
     stop?: Array<string>,
-    sensitive_word_check?: object,
+    sensitiveWordCheck?: object,
     tools?: object,
-    tool_choice?: string,
-    extra_headers?: object,
-    disable_strict_validation?: boolean,
+    toolChoice?: string,
+    extraHeaders?: object,
+    disableStrictValidation?: boolean,
     timeout?: number,
 }
 
@@ -71,20 +71,20 @@ export default class Completions {
     public async create(options: CreateCompletionsOptions): Promise<AxiosResponse<ResponseMessage>> {
         return this.app.post("/chat/completions", {
             "model": options.model,
-            "request_id": options.request_id,
+            "request_id": options.requestId,
             "temperature": options.temperature,
-            "top_p": options.top_p,
-            "do_sample": options.do_sample,
-            "max_tokens": options.max_tokens,
+            "top_p": options.topP,
+            "do_sample": options.doSample,
+            "max_tokens": options.maxTokens,
             "seed": options.seed,
             "messages": options.messages,
             "stop": options.stop,
-            "sensitive_word_check": options.sensitive_word_check,
+            "sensitive_word_check": options.sensitiveWordCheck,
             "stream": options.stream,
             "tools": options.tools,
-            "tool_choice": options.tool_choice,
+            "tool_choice": options.toolChoice,
         }, {
-            headers: options.extra_headers,
+            headers: options.extraHeaders,
             responseType: options.stream ? 'stream' : 'json'
         })
     }
