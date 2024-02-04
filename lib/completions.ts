@@ -21,11 +21,10 @@ export type CreateCompletionsOptions = {
     tools?: object,
     toolChoice?: string,
     extraHeaders?: object,
-    disableStrictValidation?: boolean,
     timeout?: number,
 }
 
-export type ResponseMessage = {
+export type CompletionsResponseMessage = {
     id: string,
     created: number,
     model: string,
@@ -68,7 +67,7 @@ export default class Completions {
     constructor(private readonly app: ZhipuAI) {
     }
 
-    public async create(options: CreateCompletionsOptions): Promise<AxiosResponse<ResponseMessage>> {
+    public async create(options: CreateCompletionsOptions): Promise<AxiosResponse<CompletionsResponseMessage>> {
         return this.app.post("/chat/completions", {
             "model": options.model,
             "request_id": options.requestId,

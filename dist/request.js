@@ -39,22 +39,22 @@ var Request = class {
   }
   post(url, data, config) {
     return __async(this, null, function* () {
-      return this.request.post(url, data, config);
+      return this.request.post(url, data, config).then((res) => res.data);
     });
   }
   get(url, config) {
     return __async(this, null, function* () {
-      return this.request.get(url, config);
+      return this.request.get(url, config).then((res) => res.data);
     });
   }
   put(url, data, config) {
     return __async(this, null, function* () {
-      return this.request.put(url, data, config);
+      return this.request.put(url, data, config).then((res) => res.data);
     });
   }
   delete(url, config) {
     return __async(this, null, function* () {
-      return this.request.delete(url, config);
+      return this.request.delete(url, config).then((res) => res.data);
     });
   }
 };

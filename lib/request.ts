@@ -14,18 +14,18 @@ export default class Request {
     }
 
     async post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
-        return this.request.post(url, data, config)
+        return this.request.post(url, data, config).then(res => res.data)
     }
 
     async get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
-        return this.request.get(url, config)
+        return this.request.get(url, config).then(res => res.data)
     }
 
     async put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
-        return this.request.put(url, data, config)
+        return this.request.put(url, data, config).then(res => res.data)
     }
 
     async delete<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
-        return this.request.delete(url, config)
+        return this.request.delete(url, config).then(res => res.data)
     }
 }

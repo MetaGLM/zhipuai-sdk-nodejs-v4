@@ -92,22 +92,47 @@ var Request = class {
   }
   post(url, data, config) {
     return __async(this, null, function* () {
-      return this.request.post(url, data, config);
+      return this.request.post(url, data, config).then((res) => res.data);
     });
   }
   get(url, config) {
     return __async(this, null, function* () {
-      return this.request.get(url, config);
+      return this.request.get(url, config).then((res) => res.data);
     });
   }
   put(url, data, config) {
     return __async(this, null, function* () {
-      return this.request.put(url, data, config);
+      return this.request.put(url, data, config).then((res) => res.data);
     });
   }
   delete(url, config) {
     return __async(this, null, function* () {
-      return this.request.delete(url, config);
+      return this.request.delete(url, config).then((res) => res.data);
+    });
+  }
+};
+
+// lib/images.ts
+var Images = class {
+  constructor(app) {
+    this.app = app;
+  }
+  create(options) {
+    return __async(this, null, function* () {
+      return this.app.post("/images/generations", {
+        "prompt": options.prompt,
+        "model": options.model,
+        "n": options.n,
+        "quality": options.quality,
+        "response_format": options.responseFormat,
+        "size": options.size,
+        "style": options.style,
+        "user": options.user
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: "json"
+      });
     });
   }
 };
@@ -139,6 +164,11 @@ var ZhipuAI = class {
   createCompletions(options) {
     return __async(this, null, function* () {
       return new Completions(this).create(options);
+    });
+  }
+  createImages(options) {
+    return __async(this, null, function* () {
+      return new Images(this).create(options);
     });
   }
   authHeaders() {

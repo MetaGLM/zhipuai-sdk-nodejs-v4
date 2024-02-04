@@ -10,6 +10,28 @@ declare class Request {
     delete<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
 }
 
+type CreateImagesOptions = {
+    model: string;
+    prompt?: string;
+    n?: number;
+    quality?: string;
+    responseFormat?: string;
+    size?: string;
+    style?: string;
+    user?: string;
+    extraHeaders?: object;
+    timeout?: number;
+};
+type ImagesResponse = {
+    created: number;
+    data: Array<string>;
+};
+declare class Images {
+    private readonly app;
+    constructor(app: ZhipuAI);
+    create(options: CreateImagesOptions): Promise<AxiosResponse<ImagesResponse>>;
+}
+
 type ZhipuAIOptions = {
     apiKey: string;
     baseUrl?: string;
@@ -23,7 +45,8 @@ declare class ZhipuAI {
     request: Request;
     constructor(options: ZhipuAIOptions);
     post(url: string, data?: object, config?: AxiosRequestConfig<object>): Promise<AxiosResponse<any>>;
-    createCompletions(options: CreateCompletionsOptions): Promise<AxiosResponse<any>>;
+    createCompletions(options: CreateCompletionsOptions): Promise<AxiosResponse<CompletionsResponseMessage>>;
+    createImages(options: CreateImagesOptions): Promise<AxiosResponse<ImagesResponse>>;
     authHeaders(): {
         Authorization: never;
     };
@@ -48,10 +71,9 @@ type CreateCompletionsOptions = {
     tools?: object;
     toolChoice?: string;
     extraHeaders?: object;
-    disableStrictValidation?: boolean;
     timeout?: number;
 };
-type ResponseMessage = {
+type CompletionsResponseMessage = {
     id: string;
     created: number;
     model: string;
@@ -92,7 +114,7 @@ type ResponseMessage = {
 declare class Completions {
     private readonly app;
     constructor(app: ZhipuAI);
-    create(options: CreateCompletionsOptions): Promise<AxiosResponse<ResponseMessage>>;
+    create(options: CreateCompletionsOptions): Promise<AxiosResponse<CompletionsResponseMessage>>;
 }
 
-export { Completions as C, type MessageOptions as M, Request as R, ZhipuAI as Z, type ZhipuAIOptions as a, type CreateCompletionsOptions as b, type ResponseMessage as c };
+export { type CreateImagesOptions as C, Images as I, type MessageOptions as M, Request as R, ZhipuAI as Z, type ImagesResponse as a, type ZhipuAIOptions as b, Completions as c, type CreateCompletionsOptions as d, type CompletionsResponseMessage as e };

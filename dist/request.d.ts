@@ -1,2 +1,2 @@
 import 'axios';
-export { R as default } from './index-wgb8OU7C.js';
+export { R as default } from './index-260Fevp7.js';
