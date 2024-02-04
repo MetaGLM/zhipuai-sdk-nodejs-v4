@@ -1,7 +1,7 @@
 import assert from "assert"
-import { generateToken } from "./jwt"
-import axios, { Axios, AxiosRequestConfig, AxiosResponse } from "axios"
-import Completions, { CreateCompletionsOptions } from "./completions"
+import { generateToken } from "./jwt.js"
+import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
+import Completions, { CreateCompletionsOptions } from "./completions.js"
 
 export type ZhipuAIOptions = {
     apiKey: string,
@@ -11,16 +11,16 @@ export type ZhipuAIOptions = {
     customHeaders?: object
 }
 
-export default class ZhipuAI {
-    public request: Axios
+export class ZhipuAI {
+    public __esModule = false
+    public request: AxiosInstance
 
     constructor(private readonly options: ZhipuAIOptions) {
         if (!options.apiKey) options.apiKey = process.env['ZHIPUAI_API_KEY'] || ''
         assert.ok(options.apiKey, "未提供api_key，请通过参数或环境变量提供")
         if (!options.baseUrl) options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || ''
         if (!options.baseUrl) options.baseUrl = "https://open.bigmodel.cn/api/paas/v4"
-
-        this.request = axios.create({
+        this.request = Axios.create({
             baseURL: options.baseUrl,
             timeout: options.timeout,
             headers: options.customHeaders
@@ -42,7 +42,8 @@ export default class ZhipuAI {
 
     authHeaders() {
         const token = generateToken(this.options.apiKey)
-        console.log(token)
         return { "Authorization": token }
     }
 }
+
+export default ZhipuAI

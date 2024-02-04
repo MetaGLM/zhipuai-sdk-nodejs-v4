@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken"
+import jsonwebtoken from "jsonwebtoken"
 
 
 const API_TOKEN_TTL_SECONDS = 3 * 60
@@ -15,7 +15,7 @@ export const generateToken = (apiKey: string) => {
         }
         // algorithm = "HS256", headers = { "alg": "HS256", "sign_type": "SIGN" }
         //@ts-ignore 不用管
-        const ret = sign(payload, secret, {
+        const ret = jsonwebtoken.sign(payload, secret, {
             algorithm: "HS256",
             header: { alg: "HS256", sign_type: "SIGN" }
         })

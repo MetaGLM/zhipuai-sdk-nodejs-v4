@@ -1,5 +1,5 @@
-import { Axios, AxiosRequestConfig, AxiosResponse } from "axios";
-import { CreateCompletionsOptions } from "./completions";
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { CreateCompletionsOptions } from "./completions.js";
 export type ZhipuAIOptions = {
     apiKey: string;
     baseUrl?: string;
@@ -7,9 +7,10 @@ export type ZhipuAIOptions = {
     maxRetries?: number;
     customHeaders?: object;
 };
-export default class ZhipuAI {
+export declare class ZhipuAI {
     private readonly options;
-    request: Axios;
+    __esModule: boolean;
+    request: AxiosInstance;
     constructor(options: ZhipuAIOptions);
     post(url: string, data?: object, config?: AxiosRequestConfig<object>): Promise<AxiosResponse<any>>;
     createCompletions(options: CreateCompletionsOptions): Promise<AxiosResponse<any>>;
@@ -17,3 +18,4 @@ export default class ZhipuAI {
         Authorization: never;
     };
 }
+export default ZhipuAI;

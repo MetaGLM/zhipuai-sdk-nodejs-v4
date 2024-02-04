@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import ZhipuAI from "./zhipu-ai";
+import ZhipuAI from "./zhipu-ai.js";
 export type MessageOptions = {
     role: "system" | "user" | "assistant" | "function";
     content: string;

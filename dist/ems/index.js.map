@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../lib/index.ts"],
   "sourcesContent": ["export { default as ZhipuAI } from \"./zhipu-ai.js\"\nexport { default } from \"./zhipu-ai.js\""],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,sBAAmC;AACnC,IAAAA,mBAAwB;",
-  "names": ["import_zhipu_ai"]
+  "mappings": ";AAAA,SAAS,WAAW,eAAe;AACnC,SAAS,eAAe;",
+  "names": []
 }

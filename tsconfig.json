@@ -1,23 +1,16 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "module": "esnext",
         "strict": true,
-        "moduleResolution": "node",
-        "skipLibCheck": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "baseUrl": ".",
         "outDir": "./dist",
         "declaration": true,
         "declarationDir": "./type",
-        "lib": [
-            "esnext",
-            "dom",
-            "dom.iterable",
-            "scripthost"
-        ]
+        "emitDeclarationOnly": false
     },
     "include": [
         "lib/**/*"

@@ -86,7 +86,7 @@ test-dist
 # Next.js build output
 .next
 out
-
+build-and-push.sh
 # Nuxt.js build / generate output
 .nuxt
 # Gatsby files
