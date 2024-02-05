@@ -19,7 +19,7 @@ yarn add zhipuai-sdk-nodejs-v4
 
 ### 创建一个对话
 
-调用 createCompletions 来快速创建一个对话
+调用 createCompletions 快速创建一个对话
 
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
@@ -49,7 +49,7 @@ dialogue()
 
 ### 生成一个图片
 
-调用 createImages 来快速生成一个图片
+调用 createImages 快速生成一个图片
 
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
@@ -71,7 +71,7 @@ createIamge()
 
 ### 创建向量
 
-调用 createEmbeddings 来快速创建向量
+调用 createEmbeddings 快速创建向量
 
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
@@ -89,4 +89,37 @@ const createEmbeddings = async () => {
 }
 
 createEmbeddings()
+```
+
+
+### 文件管理
+
+调用 createFiles 快速创建文件
+调用 findFiles 查询文件列表
+
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+import { openAsBlob } from 'fs';
+
+const filesOperations = async () => {
+    const ai = new ZhipuAI({
+        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
+        apiKey: ''
+    })
+    const result = await ai.createFiles({
+        file: await openAsBlob("/Users/winily/Project/Operation/test/package.json"),
+        purpose: "test"
+    })
+    console.log(result, "create file")
+
+    const fileList = await ai.findFiles(
+        purpose?: string;
+        limit?: number;
+        after?: string;
+        order?: "desc" | "asc";
+    )
+    console.log(fileList, "find file list")
+}
+
+filesOperations()
 ```
