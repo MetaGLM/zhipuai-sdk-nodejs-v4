@@ -17,7 +17,8 @@ export type ZhipuAIOptions = {
     baseUrl?: string,
     timeout?: number,
     maxRetries?: number,
-    customHeaders?: object
+    customHeaders?: object,
+    cacheToken?: boolean
 }
 
 export class ZhipuAI {
@@ -34,6 +35,7 @@ export class ZhipuAI {
         assert.ok(options.apiKey, "未提供api_key，请通过参数或环境变量提供")
         if (!options.baseUrl) options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || ''
         if (!options.baseUrl) options.baseUrl = "https://open.bigmodel.cn/api/paas/v4"
+        options.cacheToken = options.cacheToken ?? true
         this.request = new Request({
             timeout: options.timeout,
             headers: options.customHeaders,
@@ -67,7 +69,7 @@ export class ZhipuAI {
     }
 
     public authHeaders(): { [key: string]: string } {
-        const token = generateToken(this.options.apiKey)
+        const token = generateToken(this.options.apiKey, this.options.cacheToken)
         return { "Authorization": token }
     }
 }

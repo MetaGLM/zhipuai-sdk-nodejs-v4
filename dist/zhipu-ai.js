@@ -31,8 +31,13 @@ import assert from "assert";
 // lib/core/jwt.ts
 import jsonwebtoken from "jsonwebtoken";
 var API_TOKEN_TTL_SECONDS = 3 * 60;
-var generateToken = (apiSecretKey) => {
+var CACHE_TTL_SECONDS = API_TOKEN_TTL_SECONDS - 30;
+var tokenCache = {};
+var generateToken = (apiSecretKey, cache = true) => {
   try {
+    if (tokenCache[apiSecretKey] && Date.now() - tokenCache[apiSecretKey].createAt < CACHE_TTL_SECONDS * 1e3) {
+      return tokenCache[apiSecretKey].token;
+    }
     const [apiKey, secret] = apiSecretKey.split(".");
     const payload = {
       "api_key": apiKey,
@@ -43,6 +48,12 @@ var generateToken = (apiSecretKey) => {
       algorithm: "HS256",
       header: { alg: "HS256", sign_type: "SIGN" }
     });
+    if (cache) {
+      tokenCache[apiSecretKey] = {
+        token: ret,
+        createAt: Date.now()
+      };
+    }
     return ret;
   } catch (e) {
     throw "invalid api_key";
@@ -215,6 +226,7 @@ var ZhipuAI = class {
     __publicField(this, "images");
     __publicField(this, "embeddings");
     __publicField(this, "files");
+    var _a;
     if (!options.apiKey)
       options.apiKey = process.env["ZHIPUAI_API_KEY"] || "";
     assert.ok(options.apiKey, "\u672A\u63D0\u4F9Bapi_key\uFF0C\u8BF7\u901A\u8FC7\u53C2\u6570\u6216\u73AF\u5883\u53D8\u91CF\u63D0\u4F9B");
@@ -222,6 +234,7 @@ var ZhipuAI = class {
       options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
     if (!options.baseUrl)
       options.baseUrl = "https://open.bigmodel.cn/api/paas/v4";
+    options.cacheToken = (_a = options.cacheToken) != null ? _a : true;
     this.request = new Request({
       timeout: options.timeout,
       headers: options.customHeaders,
@@ -258,7 +271,7 @@ var ZhipuAI = class {
     });
   }
   authHeaders() {
-    const token = generateToken(this.options.apiKey);
+    const token = generateToken(this.options.apiKey, this.options.cacheToken);
     return { "Authorization": token };
   }
 };

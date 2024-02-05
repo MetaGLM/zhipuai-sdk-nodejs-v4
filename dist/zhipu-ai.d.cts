@@ -17,6 +17,7 @@ type ZhipuAIOptions = {
     timeout?: number;
     maxRetries?: number;
     customHeaders?: object;
+    cacheToken?: boolean;
 };
 declare class ZhipuAI {
     private readonly options;
