@@ -107,7 +107,7 @@ const filesOperations = async () => {
         apiKey: ''
     })
     const result = await ai.createFiles({
-        file: await openAsBlob("/Users/winily/Project/Operation/test/package.json"),
+        file: await openAsBlob("file path"),
         purpose: "test"
     })
     console.log(result, "create file")
