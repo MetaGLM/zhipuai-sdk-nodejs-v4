@@ -1,4 +1,3 @@
-export { default as ZhipuAI } from "./zhipu-ai.js"
-export { default as Completions } from "./completions.js"
-export { default as Images } from "./images.js"
-export { default } from "./zhipu-ai.js"
+export { default as ZhipuAI } from "./dist/zhipu-ai.js"
+export { default } from "./dist/zhipu-ai.js"
+export { Completions, Images, Embeddings } from "./dist/capability/index.js"

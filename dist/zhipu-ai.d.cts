@@ -1,2 +1,40 @@
-export { Z as ZhipuAI, g as ZhipuAIOptions, Z as default } from './index-hCfUd9Lh.cjs';
+import Request from './core/request.cjs';
+import Completions from './capability/completions.cjs';
+import Images from './capability/images.cjs';
+import Embeddings from './capability/embeddings.cjs';
+import { CreateCompletionsOptions, CompletionsResponseMessage } from './types/completions.cjs';
+import { CreateImagesOptions, ImagesResponse } from './types/images.cjs';
+import { CreateEmbeddingsOptions, EmbeddingsResponse } from './types/embeddings.cjs';
+import { CreateFileOptions, FileResponse, FindFileListOptions, FileListResponse } from './types/files.cjs';
+import Files from './capability/files.cjs';
 import 'axios';
+import './core/baseApi.cjs';
+import './types/baseApi.cjs';
+
+type ZhipuAIOptions = {
+    apiKey: string;
+    baseUrl?: string;
+    timeout?: number;
+    maxRetries?: number;
+    customHeaders?: object;
+};
+declare class ZhipuAI {
+    private readonly options;
+    __esModule: boolean;
+    request: Request;
+    completions: Completions;
+    images: Images;
+    embeddings: Embeddings;
+    files: Files;
+    constructor(options: ZhipuAIOptions);
+    createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage>;
+    createImages(options: CreateImagesOptions): Promise<ImagesResponse>;
+    createEmbeddings(options: CreateEmbeddingsOptions): Promise<EmbeddingsResponse>;
+    createFiles(options: CreateFileOptions): Promise<FileResponse>;
+    findFiles(options?: FindFileListOptions): Promise<FileListResponse>;
+    authHeaders(): {
+        [key: string]: string;
+    };
+}
+
+export { ZhipuAI, type ZhipuAIOptions, ZhipuAI as default };

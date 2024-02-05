@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../lib/types/baseApi.ts"],"sourcesContent":["export type BaseRequestOptions = {\n    extraHeaders?: object,\n    timeout?: number,\n    stream?: boolean\n}"],"mappings":";;;;;;;;;;;;;;;;AAAA;AAAA;","names":[]}

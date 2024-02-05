@@ -1,0 +1,10 @@
+export { default as Completions } from './completions.js';
+export { default as Images } from './images.js';
+export { default as Embeddings } from './embeddings.js';
+import '../core/baseApi.js';
+import '../core/request.js';
+import 'axios';
+import '../types/baseApi.js';
+import '../types/completions.js';
+import '../types/images.js';
+import '../types/embeddings.js';

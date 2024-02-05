@@ -1,2 +1,13 @@
-export { C as Completions, E as Embeddings, I as Images, Z as ZhipuAI, Z as default } from './index-hCfUd9Lh.cjs';
+export { default as ZhipuAI, default } from './zhipu-ai.cjs';
+export { default as Completions } from './capability/completions.cjs';
+export { default as Images } from './capability/images.cjs';
+export { default as Embeddings } from './capability/embeddings.cjs';
+import './core/request.cjs';
 import 'axios';
+import './types/completions.cjs';
+import './types/baseApi.cjs';
+import './types/images.cjs';
+import './types/embeddings.cjs';
+import './types/files.cjs';
+import './capability/files.cjs';
+import './core/baseApi.cjs';

@@ -66,7 +66,7 @@ module.exports = __toCommonJS(lib_exports);
 // lib/zhipu-ai.ts
 var import_assert = __toESM(require("assert"), 1);
 
-// lib/jwt.ts
+// lib/core/jwt.ts
 var import_jsonwebtoken = __toESM(require("jsonwebtoken"), 1);
 var API_TOKEN_TTL_SECONDS = 3 * 60;
 var generateToken = (apiSecretKey) => {
@@ -87,10 +87,63 @@ var generateToken = (apiSecretKey) => {
   }
 };
 
-// lib/baseApi.ts
+// lib/core/request.ts
+var import_axios = __toESM(require("axios"), 1);
+var Request = class {
+  constructor(config, authHeaders) {
+    __publicField(this, "request");
+    this.request = import_axios.default.create(config);
+    this.request.interceptors.request.use((config2) => {
+      config2.headers.set(authHeaders());
+      return config2;
+    });
+  }
+  post(url, data, config) {
+    return __async(this, null, function* () {
+      return this.request.post(url, data, config).then((res) => res.data);
+    });
+  }
+  postForm(url, data, config) {
+    return __async(this, null, function* () {
+      return this.request.post(url, data, config).then((res) => res.data);
+    });
+  }
+  get(url, config) {
+    return __async(this, null, function* () {
+      return this.request.get(url, config).then((res) => res.data);
+    });
+  }
+  put(url, data, config) {
+    return __async(this, null, function* () {
+      return this.request.put(url, data, config).then((res) => res.data);
+    });
+  }
+  delete(url, config) {
+    return __async(this, null, function* () {
+      return this.request.delete(url, config).then((res) => res.data);
+    });
+  }
+};
+
+// lib/core/baseApi.ts
 var BaseApi = class {
   constructor(request) {
     this.request = request;
+  }
+  processError(err) {
+    var _a, _b;
+    const data = (_b = (_a = err == null ? void 0 : err.response) == null ? void 0 : _a.data) != null ? _b : err;
+    return Promise.reject(data);
+  }
+  get(url, params, options) {
+    return __async(this, null, function* () {
+      return this.request.get(url, {
+        params,
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
+    });
   }
   post(url, data, options) {
     return __async(this, null, function* () {
@@ -98,15 +151,21 @@ var BaseApi = class {
         headers: options.extraHeaders,
         timeout: options.timeout,
         responseType: options.stream ? "stream" : "json"
-      }).catch((err) => {
-        const data2 = err.response.data;
-        return Promise.reject(data2);
-      });
+      }).catch(this.processError);
+    });
+  }
+  postForm(url, data, options) {
+    return __async(this, null, function* () {
+      return this.request.postForm(url, data, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
 
-// lib/completions.ts
+// lib/capability/completions.ts
 var Completions = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
@@ -129,41 +188,7 @@ var Completions = class extends BaseApi {
   }
 };
 
-// lib/request.ts
-var import_axios = __toESM(require("axios"), 1);
-var Request = class {
-  constructor(app, config) {
-    this.app = app;
-    __publicField(this, "request");
-    this.request = import_axios.default.create(config);
-    this.request.interceptors.request.use((config2) => {
-      config2.headers.set(this.app.authHeaders());
-      return config2;
-    });
-  }
-  post(url, data, config) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, config).then((res) => res.data);
-    });
-  }
-  get(url, config) {
-    return __async(this, null, function* () {
-      return this.request.get(url, config).then((res) => res.data);
-    });
-  }
-  put(url, data, config) {
-    return __async(this, null, function* () {
-      return this.request.put(url, data, config).then((res) => res.data);
-    });
-  }
-  delete(url, config) {
-    return __async(this, null, function* () {
-      return this.request.delete(url, config).then((res) => res.data);
-    });
-  }
-};
-
-// lib/images.ts
+// lib/capability/images.ts
 var Images = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
@@ -181,7 +206,7 @@ var Images = class extends BaseApi {
   }
 };
 
-// lib/embeddings.ts
+// lib/capability/embeddings.ts
 var Embeddings = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
@@ -196,12 +221,38 @@ var Embeddings = class extends BaseApi {
   }
 };
 
+// lib/capability/files.ts
+var Files = class extends BaseApi {
+  create(options) {
+    return __async(this, null, function* () {
+      const formData = new FormData();
+      formData.append("purpose", options.purpose);
+      formData.append("file", options.file);
+      return this.postForm("/files", formData, options);
+    });
+  }
+  findList(options) {
+    return __async(this, null, function* () {
+      return this.get("/files", {
+        "purpose": options.purpose,
+        "limit": options.limit,
+        "after": options.after,
+        "order": options.order
+      }, options);
+    });
+  }
+};
+
 // lib/zhipu-ai.ts
 var ZhipuAI = class {
   constructor(options) {
     this.options = options;
     __publicField(this, "__esModule", false);
     __publicField(this, "request");
+    __publicField(this, "completions");
+    __publicField(this, "images");
+    __publicField(this, "embeddings");
+    __publicField(this, "files");
     if (!options.apiKey)
       options.apiKey = process.env["ZHIPUAI_API_KEY"] || "";
     import_assert.default.ok(options.apiKey, "\u672A\u63D0\u4F9Bapi_key\uFF0C\u8BF7\u901A\u8FC7\u53C2\u6570\u6216\u73AF\u5883\u53D8\u91CF\u63D0\u4F9B");
@@ -209,25 +260,39 @@ var ZhipuAI = class {
       options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
     if (!options.baseUrl)
       options.baseUrl = "https://open.bigmodel.cn/api/paas/v4";
-    this.request = new Request(this, {
+    this.request = new Request({
       timeout: options.timeout,
       headers: options.customHeaders,
       baseURL: options.baseUrl
-    });
+    }, this.authHeaders.bind(this));
+    this.completions = new Completions(this.request);
+    this.images = new Images(this.request);
+    this.embeddings = new Embeddings(this.request);
+    this.files = new Files(this.request);
   }
   createCompletions(options) {
     return __async(this, null, function* () {
-      return new Completions(this.request).create(options);
+      return this.completions.create(options);
     });
   }
   createImages(options) {
     return __async(this, null, function* () {
-      return new Images(this.request).create(options);
+      return this.images.create(options);
     });
   }
   createEmbeddings(options) {
     return __async(this, null, function* () {
-      return new Embeddings(this.request).create(options);
+      return this.embeddings.create(options);
+    });
+  }
+  createFiles(options) {
+    return __async(this, null, function* () {
+      return this.files.create(options);
+    });
+  }
+  findFiles() {
+    return __async(this, arguments, function* (options = {}) {
+      return this.files.findList(options);
     });
   }
   authHeaders() {
