@@ -1,6 +1,6 @@
 {
   "name": "zhipuai-sdk-nodejs-v4",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "license": "MIT",
   "main": "./index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     },
     "default": {
       "require": "./dist/index.cjs",
-      "default": "./index.js"
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
