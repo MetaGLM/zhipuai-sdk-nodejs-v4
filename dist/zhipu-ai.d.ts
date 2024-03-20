@@ -7,12 +7,13 @@ import { CreateImagesOptions, ImagesResponse } from './types/images.js';
 import { CreateEmbeddingsOptions, EmbeddingsResponse } from './types/embeddings.js';
 import { CreateFileOptions, FileResponse, FindFileListOptions, FileListResponse } from './types/files.js';
 import Files from './capability/files.js';
+import { IncomingMessage } from 'http';
 import 'axios';
 import './core/baseApi.js';
 import './types/baseApi.js';
 
 type ZhipuAIOptions = {
-    apiKey: string;
+    apiKey?: string;
     baseUrl?: string;
     timeout?: number;
     maxRetries?: number;
@@ -27,8 +28,9 @@ declare class ZhipuAI {
     images: Images;
     embeddings: Embeddings;
     files: Files;
-    constructor(options: ZhipuAIOptions);
-    createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage>;
+    private apiKey;
+    constructor(options?: ZhipuAIOptions);
+    createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage | IncomingMessage>;
     createImages(options: CreateImagesOptions): Promise<ImagesResponse>;
     createEmbeddings(options: CreateEmbeddingsOptions): Promise<EmbeddingsResponse>;
     createFiles(options: CreateFileOptions): Promise<FileResponse>;

@@ -12,23 +12,23 @@ export default class Request {
         })
     }
 
-    async post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
+    async post<T = any, R = T | any, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
         return this.request.post(url, data, config).then(res => res.data)
     }
 
-    async postForm<T = any, R = AxiosResponse<T>, D = object>(url: string, data: D, config?: AxiosRequestConfig<D>): Promise<R> {
+    async postForm<T = any, R = T | any, D = object>(url: string, data: D, config?: AxiosRequestConfig<D>): Promise<R> {
         return this.request.post(url, data, config).then(res => res.data)
     }
 
-    async get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
+    async get<T = any, R = T | any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
         return this.request.get(url, config).then(res => res.data)
     }
 
-    async put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
+    async put<T = any, R = T | any, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
         return this.request.put(url, data, config).then(res => res.data)
     }
 
-    async delete<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
+    async delete<T = any, R = T | any, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
         return this.request.delete(url, config).then(res => res.data)
     }
 }

@@ -56,41 +56,13 @@ var BaseApi = class {
     const data = (_b = (_a = err == null ? void 0 : err.response) == null ? void 0 : _a.data) != null ? _b : err;
     return Promise.reject(data);
   }
-  get(url, params, options) {
-    return __async(this, null, function* () {
-      return this.request.get(url, {
-        params,
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  post(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  postForm(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.postForm(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
 };
 
 // lib/capability/completions.ts
 var Completions = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/chat/completions", {
+      return this.request.post("/chat/completions", {
         "model": options.model,
         "request_id": options.requestId,
         "temperature": options.temperature,
@@ -104,7 +76,11 @@ var Completions = class extends BaseApi {
         "stream": options.stream,
         "tools": options.tools,
         "tool_choice": options.toolChoice
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
@@ -113,7 +89,7 @@ var Completions = class extends BaseApi {
 var Images = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/images/generations", {
+      return this.request.post("/images/generations", {
         "prompt": options.prompt,
         "model": options.model,
         "n": options.n,
@@ -122,7 +98,11 @@ var Images = class extends BaseApi {
         "size": options.size,
         "style": options.style,
         "user": options.user
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
@@ -131,13 +111,17 @@ var Images = class extends BaseApi {
 var Embeddings = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/embeddings", {
+      return this.request.post("/embeddings", {
         "input": options.input,
         "model": options.model,
         "encoding_format": options.encodingFormat,
         "user": options.user,
         "sensitive_word_check": options.sensitiveWordCheck
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
