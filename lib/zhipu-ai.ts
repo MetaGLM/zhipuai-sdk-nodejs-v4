@@ -53,9 +53,7 @@ export class ZhipuAI {
     }
 
     public async createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage | IncomingMessage> {
-        const result = await this.completions.create(options);
-        if (result instanceof IncomingMessage) return result
-        return result
+        return this.completions.create(options);
     }
 
     public async createImages(options: CreateImagesOptions): Promise<ImagesResponse> {

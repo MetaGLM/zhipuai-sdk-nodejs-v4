@@ -239,7 +239,6 @@ var Files = class extends BaseApi {
 };
 
 // lib/zhipu-ai.ts
-var import_http = require("http");
 var ZhipuAI = class {
   constructor(options = {}) {
     this.options = options;
@@ -273,10 +272,7 @@ var ZhipuAI = class {
   }
   createCompletions(options) {
     return __async(this, null, function* () {
-      const result = yield this.completions.create(options);
-      if (result instanceof import_http.IncomingMessage)
-        return result;
-      return result;
+      return this.completions.create(options);
     });
   }
   createImages(options) {
