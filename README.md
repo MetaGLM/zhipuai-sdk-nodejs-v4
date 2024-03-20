@@ -25,10 +25,7 @@ yarn add zhipuai-sdk-nodejs-v4
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
 const dialogue = async () => {
-    const ai = new ZhipuAI({
-        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
-        apiKey: ''
-    })
+    const ai = new ZhipuAI()
     const data = await ai.createCompletions({
         model: "glm-4",
         messages: [
@@ -38,10 +35,33 @@ const dialogue = async () => {
             {"role": "assistant", "content": "我叫chatGLM"},
             {"role": "user", "content": "你都可以做些什么事"}
         ],
-        // 如果为 true data 就是一个 stream 对象，要通过 on('data', (buffer) => void) 读取数据
         stream: false, 
     })
     console.log(data, "message")
+}
+
+dialogue()
+```
+
+流式调用
+
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+
+const dialogue = async () => {
+    const ai = new ZhipuAI()
+    const result = await ai.createCompletions({
+        model: "glm-4",
+        messages: [
+            { "role": "user", "content": "你好" },
+            { "role": "assistant", "content": "我是人工智能助手" },
+            { "role": "user", "content": "你叫什么名字" }
+        ],
+        stream: true
+    })
+    for await (const chunk of result) {
+        console.log(chunk.toString())
+    }
 }
 
 dialogue()
@@ -55,10 +75,7 @@ dialogue()
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
 const createIamge = async () => {
-    const ai = new ZhipuAI({
-        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
-        apiKey: ''
-    })
+    const ai = new ZhipuAI()
     const result = await ai.createImages({
         model: "cogview-3",
         prompt: "一只可爱的小猫咪"
@@ -77,15 +94,12 @@ createIamge()
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
 const createEmbeddings = async () => {
-    const ai = new ZhipuAI({
-        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
-        apiKey: ''
-    })
+    const ai = new ZhipuAI()
     const result = await ai.createEmbeddings({
         model: "embedding-2", 
         input: "你好"
     })
-    console.log(data, "embedding")
+    console.log(result, "embedding")
 }
 
 createEmbeddings()
@@ -102,10 +116,7 @@ import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 import { openAsBlob } from 'fs';
 
 const filesOperations = async () => {
-    const ai = new ZhipuAI({
-        // 填写您的 APIKey 不填的话默认从环境变量读取 ZHIPUAI_API_KEY 的值
-        apiKey: ''
-    })
+    const ai = new ZhipuAI()
     const result = await ai.createFiles({
         file: await openAsBlob("file path"),
         purpose: "test"

@@ -54,41 +54,13 @@ var BaseApi = class {
     const data = (_b = (_a = err == null ? void 0 : err.response) == null ? void 0 : _a.data) != null ? _b : err;
     return Promise.reject(data);
   }
-  get(url, params, options) {
-    return __async(this, null, function* () {
-      return this.request.get(url, {
-        params,
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  post(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  postForm(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.postForm(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
 };
 
 // lib/capability/images.ts
 var Images = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/images/generations", {
+      return this.request.post("/images/generations", {
         "prompt": options.prompt,
         "model": options.model,
         "n": options.n,
@@ -97,7 +69,11 @@ var Images = class extends BaseApi {
         "size": options.size,
         "style": options.style,
         "user": options.user
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };

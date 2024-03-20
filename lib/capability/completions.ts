@@ -1,10 +1,10 @@
 import BaseApi from "../core/baseApi.js";
 import { CreateCompletionsOptions, CompletionsResponseMessage } from "../types/index.js";
+import { IncomingMessage } from "http";
 
 export default class Completions extends BaseApi {
-
-    public async create(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage> {
-        return this.post("/chat/completions", {
+    public async create(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage | IncomingMessage> {
+        return this.request.post("/chat/completions", {
             "model": options.model,
             "request_id": options.requestId,
             "temperature": options.temperature,
@@ -18,6 +18,11 @@ export default class Completions extends BaseApi {
             "stream": options.stream,
             "tools": options.tools,
             "tool_choice": options.toolChoice,
-        }, options)
+        }, {
+            headers: options.extraHeaders,
+            timeout: options.timeout,
+            responseType: options.stream ? 'stream' : 'json'
+        })
+            .catch(this.processError)
     }
 } 

@@ -11,3 +11,4 @@ import './types/embeddings.cjs';
 import './types/files.cjs';
 import './capability/files.cjs';
 import './core/baseApi.cjs';
+import 'http';

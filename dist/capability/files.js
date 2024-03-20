@@ -29,34 +29,6 @@ var BaseApi = class {
     const data = (_b = (_a = err == null ? void 0 : err.response) == null ? void 0 : _a.data) != null ? _b : err;
     return Promise.reject(data);
   }
-  get(url, params, options) {
-    return __async(this, null, function* () {
-      return this.request.get(url, {
-        params,
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  post(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  postForm(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.postForm(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
 };
 
 // lib/capability/files.ts
@@ -66,17 +38,22 @@ var Files = class extends BaseApi {
       const formData = new FormData();
       formData.append("purpose", options.purpose);
       formData.append("file", options.file);
-      return this.postForm("/files", formData, options);
+      return this.request.postForm("/files", formData, options).catch(this.processError);
     });
   }
   findList(options) {
     return __async(this, null, function* () {
-      return this.get("/files", {
-        "purpose": options.purpose,
-        "limit": options.limit,
-        "after": options.after,
-        "order": options.order
-      }, options);
+      return this.request.get("/files", {
+        params: {
+          "purpose": options.purpose,
+          "limit": options.limit,
+          "after": options.after,
+          "order": options.order
+        },
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      });
     });
   }
 };

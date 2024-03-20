@@ -108,41 +108,13 @@ var BaseApi = class {
     const data = (_b = (_a = err == null ? void 0 : err.response) == null ? void 0 : _a.data) != null ? _b : err;
     return Promise.reject(data);
   }
-  get(url, params, options) {
-    return __async(this, null, function* () {
-      return this.request.get(url, {
-        params,
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  post(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.post(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
-  postForm(url, data, options) {
-    return __async(this, null, function* () {
-      return this.request.postForm(url, data, {
-        headers: options.extraHeaders,
-        timeout: options.timeout,
-        responseType: options.stream ? "stream" : "json"
-      }).catch(this.processError);
-    });
-  }
 };
 
 // lib/capability/completions.ts
 var Completions = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/chat/completions", {
+      return this.request.post("/chat/completions", {
         "model": options.model,
         "request_id": options.requestId,
         "temperature": options.temperature,
@@ -156,7 +128,11 @@ var Completions = class extends BaseApi {
         "stream": options.stream,
         "tools": options.tools,
         "tool_choice": options.toolChoice
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
@@ -165,7 +141,7 @@ var Completions = class extends BaseApi {
 var Images = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/images/generations", {
+      return this.request.post("/images/generations", {
         "prompt": options.prompt,
         "model": options.model,
         "n": options.n,
@@ -174,7 +150,11 @@ var Images = class extends BaseApi {
         "size": options.size,
         "style": options.style,
         "user": options.user
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
@@ -183,13 +163,17 @@ var Images = class extends BaseApi {
 var Embeddings = class extends BaseApi {
   create(options) {
     return __async(this, null, function* () {
-      return this.post("/embeddings", {
+      return this.request.post("/embeddings", {
         "input": options.input,
         "model": options.model,
         "encoding_format": options.encodingFormat,
         "user": options.user,
         "sensitive_word_check": options.sensitiveWordCheck
-      }, options);
+      }, {
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      }).catch(this.processError);
     });
   }
 };
@@ -201,24 +185,30 @@ var Files = class extends BaseApi {
       const formData = new FormData();
       formData.append("purpose", options.purpose);
       formData.append("file", options.file);
-      return this.postForm("/files", formData, options);
+      return this.request.postForm("/files", formData, options).catch(this.processError);
     });
   }
   findList(options) {
     return __async(this, null, function* () {
-      return this.get("/files", {
-        "purpose": options.purpose,
-        "limit": options.limit,
-        "after": options.after,
-        "order": options.order
-      }, options);
+      return this.request.get("/files", {
+        params: {
+          "purpose": options.purpose,
+          "limit": options.limit,
+          "after": options.after,
+          "order": options.order
+        },
+        headers: options.extraHeaders,
+        timeout: options.timeout,
+        responseType: options.stream ? "stream" : "json"
+      });
     });
   }
 };
 
 // lib/zhipu-ai.ts
+import { IncomingMessage } from "http";
 var ZhipuAI = class {
-  constructor(options) {
+  constructor(options = {}) {
     this.options = options;
     __publicField(this, "__esModule", false);
     __publicField(this, "request");
@@ -226,10 +216,13 @@ var ZhipuAI = class {
     __publicField(this, "images");
     __publicField(this, "embeddings");
     __publicField(this, "files");
+    __publicField(this, "apiKey");
     var _a;
-    if (!options.apiKey)
-      options.apiKey = process.env["ZHIPUAI_API_KEY"] || "";
-    assert.ok(options.apiKey, "\u672A\u63D0\u4F9Bapi_key\uFF0C\u8BF7\u901A\u8FC7\u53C2\u6570\u6216\u73AF\u5883\u53D8\u91CF\u63D0\u4F9B");
+    this.apiKey = process.env["ZHIPUAI_API_KEY"] || "";
+    if (options.apiKey) {
+      this.apiKey = options.apiKey;
+    }
+    assert.ok(this.apiKey, "\u672A\u63D0\u4F9Bapi_key\uFF0C\u8BF7\u901A\u8FC7\u53C2\u6570\u6216\u73AF\u5883\u53D8\u91CF\u63D0\u4F9B");
     if (!options.baseUrl)
       options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
     if (!options.baseUrl)
@@ -247,7 +240,10 @@ var ZhipuAI = class {
   }
   createCompletions(options) {
     return __async(this, null, function* () {
-      return this.completions.create(options);
+      const result = yield this.completions.create(options);
+      if (result instanceof IncomingMessage)
+        return result;
+      return result;
     });
   }
   createImages(options) {
@@ -271,7 +267,7 @@ var ZhipuAI = class {
     });
   }
   authHeaders() {
-    const token = generateToken(this.options.apiKey, this.options.cacheToken);
+    const token = generateToken(this.apiKey, this.options.cacheToken);
     return { "Authorization": token };
   }
 };

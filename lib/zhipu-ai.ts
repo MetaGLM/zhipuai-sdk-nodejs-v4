@@ -1,9 +1,7 @@
 import assert from "assert"
 import { generateToken } from "./core/jwt.js"
 import Request from "./core/request.js"
-
 import { Completions, Images, Embeddings } from "./capability"
-
 import {
     CompletionsResponseMessage, CreateCompletionsOptions,
     CreateImagesOptions, ImagesResponse,
@@ -11,9 +9,10 @@ import {
     CreateFileOptions, FileResponse, FileListResponse, FindFileListOptions,
 } from "./types"
 import Files from "./capability/files.js"
+import { IncomingMessage } from "http"
 
 export type ZhipuAIOptions = {
-    apiKey: string,
+    apiKey?: string,
     baseUrl?: string,
     timeout?: number,
     maxRetries?: number,
@@ -28,11 +27,16 @@ export class ZhipuAI {
     public images: Images
     public embeddings: Embeddings
     public files: Files
+    private apiKey: string
 
 
-    constructor(private readonly options: ZhipuAIOptions) {
-        if (!options.apiKey) options.apiKey = process.env['ZHIPUAI_API_KEY'] || ''
-        assert.ok(options.apiKey, "未提供api_key，请通过参数或环境变量提供")
+    constructor(private readonly options: ZhipuAIOptions = {}) {
+        this.apiKey = process.env['ZHIPUAI_API_KEY'] || ''
+        if (options.apiKey) {
+            this.apiKey = options.apiKey
+        }
+
+        assert.ok(this.apiKey, "未提供api_key，请通过参数或环境变量提供")
         if (!options.baseUrl) options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || ''
         if (!options.baseUrl) options.baseUrl = "https://open.bigmodel.cn/api/paas/v4"
         options.cacheToken = options.cacheToken ?? true
@@ -48,8 +52,10 @@ export class ZhipuAI {
         this.files = new Files(this.request)
     }
 
-    public async createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage> {
-        return this.completions.create(options)
+    public async createCompletions(options: CreateCompletionsOptions): Promise<CompletionsResponseMessage | IncomingMessage> {
+        const result = await this.completions.create(options);
+        if (result instanceof IncomingMessage) return result
+        return result
     }
 
     public async createImages(options: CreateImagesOptions): Promise<ImagesResponse> {
@@ -69,7 +75,7 @@ export class ZhipuAI {
     }
 
     public authHeaders(): { [key: string]: string } {
-        const token = generateToken(this.options.apiKey, this.options.cacheToken)
+        const token = generateToken(this.apiKey, this.options.cacheToken)
         return { "Authorization": token }
     }
 }

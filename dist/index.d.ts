@@ -11,3 +11,4 @@ import './types/embeddings.js';
 import './types/files.js';
 import './capability/files.js';
 import './core/baseApi.js';
+import 'http';
