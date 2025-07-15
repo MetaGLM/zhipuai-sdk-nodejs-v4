@@ -1,136 +1,142 @@
-# 智谱大模型开放接口SDK
-智谱开放平台大模型接口 Nodejs SDK (Big Model API SDK in Nodejs)，让开发者更便捷的调用智谱开放API
+# ZhipuAI Open Platform Node.js SDK
 
-## 简介
+[![npm version](https://img.shields.io/npm/v/zhipuai-sdk-nodejs-v4.svg)](https://www.npmjs.com/package/zhipuai-sdk-nodejs-v4)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node.js-14%2B-green.svg)](https://nodejs.org/)
 
-目前 SDK 处于刚开始开发阶段，有 bug 或者缺少需要的功能请提 issues
+[中文文档](README_CN.md)
 
-## 安装
+The official Node.js SDK for [ZhipuAI Open Platform](http://open.bigmodel.cn/howuse/platformintroduced) Big Model API, enabling developers to easily integrate ZhipuAI's powerful AI capabilities into their Node.js applications.
 
-```shell
+## ✨ Features
+
+- 🚀 **Type-safe API**: Complete TypeScript type definitions for excellent development experience
+- 🔧 **Easy Integration**: Simple and intuitive API design for quick integration
+- ⚡ **High Performance**: Built with modern Node.js libraries for optimal performance
+- 🛡️ **Secure**: Built-in authentication and token management
+- 📦 **Lightweight**: Minimal dependencies for easy project integration
+- 🌊 **Streaming Support**: Full support for streaming response handling
+
+## 📦 Installation
+
+### Requirements
+- Node.js 14 or higher
+- npm, yarn, or pnpm
+
+### npm
+```bash
 npm install zhipuai-sdk-nodejs-v4
-# or
+```
+
+### yarn
+```bash
 yarn add zhipuai-sdk-nodejs-v4
 ```
 
-## 使用
-
-使用 apiKey 创建 Client，大部分操作都在这里进行
-
-### 创建一个对话
-
-调用 createCompletions 快速创建一个对话
-
-```javascript
-import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
-
-const dialogue = async () => {
-    const ai = new ZhipuAI()
-    const data = await ai.createCompletions({
-        model: "glm-4",
-        messages: [
-            {"role": "user", "content": "你好"},
-            {"role": "assistant", "content": "我是人工智能助手"},
-            {"role": "user", "content": "你叫什么名字"},
-            {"role": "assistant", "content": "我叫chatGLM"},
-            {"role": "user", "content": "你都可以做些什么事"}
-        ],
-        stream: false, 
-    })
-    console.log(data, "message")
-}
-
-dialogue()
+### pnpm
+```bash
+pnpm add zhipuai-sdk-nodejs-v4
 ```
 
-流式调用
+### 📋 Dependencies
+
+This SDK uses the following core dependencies:
+
+| Library | Version |
+|---------|---------|
+| axios | ^1.6.7 |
+| jsonwebtoken | ^9.0.2 |
+
+## 🚀 Quick Start
+
+### Basic Usage
+
+1. **Create a Client** with your API key
+2. **Call the desired API methods**
+
+### Client Configuration
+
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+
+// Use API key from environment variable
+const ai = new ZhipuAI();
+
+// Or pass API key directly
+const ai = new ZhipuAI({
+    apiKey: 'your_api_key_here',
+    baseUrl: 'https://open.bigmodel.cn/api/paas/v4', // Optional, default value
+    timeout: 30000, // Optional, request timeout
+    cacheToken: true // Optional, whether to cache token
+});
+```
+
+## 💡 Examples
+
+### Chat Model Invocation
+
+#### Synchronous Invocation
+
+- **Basic Chat**
 
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
 const dialogue = async () => {
-    const ai = new ZhipuAI()
+    const ai = new ZhipuAI();
     const result = await ai.createCompletions({
         model: "glm-4",
         messages: [
-            { "role": "user", "content": "你好" },
-            { "role": "assistant", "content": "我是人工智能助手" },
-            { "role": "user", "content": "你叫什么名字" }
+            {"role": "user", "content": "What is the relationship between ZhipuAI and ChatGLM?"}
+        ],
+        stream: false
+    });
+    console.log(result);
+};
+
+dialogue();
+```
+
+#### Streaming Invocation (SSE)
+
+- **Basic Chat**
+
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+
+const streamDialogue = async () => {
+    const ai = new ZhipuAI();
+    const stream = await ai.createCompletions({
+        model: "glm-4",
+        messages: [
+            {"role": "user", "content": "What is the relationship between ZhipuAI and ChatGLM?"}
         ],
         stream: true
-    })
-    for await (const chunk of result) {
-        console.log(chunk.toString())
+    });
+    
+    // Process streaming results
+    for await (const chunk of stream) {
+        console.log(chunk.toString());
     }
-}
+};
 
-dialogue()
+streamDialogue();
 ```
 
-### 生成一个图片
+## 📄 License
 
-调用 createImages 快速生成一个图片
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```javascript
-import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+## 🤝 Contributing
 
-const createIamge = async () => {
-    const ai = new ZhipuAI()
-    const result = await ai.createImages({
-        model: "cogview-3",
-        prompt: "一只可爱的小猫咪"
-    })
-    console.log(result.data, "image url list")
-}
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-createIamge()
-```
+## 📞 Support
 
-### 创建向量
+- 📖 Documentation: [ZhipuAI Open Platform](http://open.bigmodel.cn/)
+- 🐛 Issues: [GitHub Issues](https://github.com/zhipuai/zhipuai-sdk-nodejs-v4/issues)
+- 💬 Community: [ZhipuAI Developer Community](http://open.bigmodel.cn/)
 
-调用 createEmbeddings 快速创建向量
+---
 
-```javascript
-import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
-
-const createEmbeddings = async () => {
-    const ai = new ZhipuAI()
-    const result = await ai.createEmbeddings({
-        model: "embedding-2", 
-        input: "你好"
-    })
-    console.log(result, "embedding")
-}
-
-createEmbeddings()
-```
-
-
-### 文件管理
-
-调用 createFiles 快速创建文件
-调用 findFiles 查询文件列表
-
-```javascript
-import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
-import { openAsBlob } from 'fs';
-
-const filesOperations = async () => {
-    const ai = new ZhipuAI()
-    const result = await ai.createFiles({
-        file: await openAsBlob("file path"),
-        purpose: "test"
-    })
-    console.log(result, "create file")
-
-    const fileList = await ai.findFiles(
-        purpose?: string;
-        limit?: number;
-        after?: string;
-        order?: "desc" | "asc";
-    )
-    console.log(fileList, "find file list")
-}
-
-filesOperations()
-```
+**Note**: This SDK is currently in active development. If you encounter any bugs or need additional features, please submit an issue.
