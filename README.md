@@ -17,6 +17,19 @@ yarn add zhipuai-sdk-nodejs-v4
 
 使用 apiKey 创建 Client，大部分操作都在这里进行
 
+### 初始化客户端
+```javascript
+import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
+
+// 创建客户端实例
+const client = new ZhipuAI({
+  apiKey: process.env.ZHIPU_API_KEY, // 建议从环境变量读取
+});
+
+// 或者使用默认配置
+const defaultClient = new ZhipuAI();
+```
+
 ### 创建一个对话
 
 调用 createCompletions 快速创建一个对话
@@ -24,7 +37,7 @@ yarn add zhipuai-sdk-nodejs-v4
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
-const dialogue = async () => {
+const startDialogue = async () => {
     const ai = new ZhipuAI()
     const data = await ai.createCompletions({
         model: "glm-4",
@@ -40,7 +53,7 @@ const dialogue = async () => {
     console.log(data, "message")
 }
 
-dialogue()
+startDialogue()
 ```
 
 流式调用
@@ -48,7 +61,7 @@ dialogue()
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
-const dialogue = async () => {
+const streamDialogue = async () => {
     const ai = new ZhipuAI()
     const result = await ai.createCompletions({
         model: "glm-4",
@@ -64,7 +77,7 @@ const dialogue = async () => {
     }
 }
 
-dialogue()
+streamDialogue()
 ```
 
 ### 生成一个图片
@@ -74,7 +87,7 @@ dialogue()
 ```javascript
 import { ZhipuAI } from 'zhipuai-sdk-nodejs-v4';
 
-const createIamge = async () => {
+const generateImage = async () => {
     const ai = new ZhipuAI()
     const result = await ai.createImages({
         model: "cogview-3",
@@ -83,7 +96,7 @@ const createIamge = async () => {
     console.log(result.data, "image url list")
 }
 
-createIamge()
+generateImage()
 ```
 
 ### 创建向量
