@@ -18,6 +18,9 @@ type CreateCompletionsOptions = {
     sensitiveWordCheck?: object;
     tools?: object;
     toolChoice?: string;
+    responseFormat?: {
+        type: "text" | "json_object";
+    };
 } & BaseRequestOptions;
 type CompletionsResponseMessage = {
     id: string;

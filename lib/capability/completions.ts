@@ -18,6 +18,7 @@ export default class Completions extends BaseApi {
             "stream": options.stream,
             "tools": options.tools,
             "tool_choice": options.toolChoice,
+            "response_format": options.responseFormat,
         }, {
             headers: options.extraHeaders,
             timeout: options.timeout,
@@ -25,4 +26,4 @@ export default class Completions extends BaseApi {
         })
             .catch(this.processError)
     }
-} 
+}

@@ -97,6 +97,25 @@ const dialogue = async () => {
 dialogue();
 ```
 
+#### JSON Mode
+
+Use `responseFormat: { type: 'json_object' }` with a text model that supports
+[JSON mode](https://docs.z.ai/guides/capabilities/struct-output). Describe the
+expected JSON in your messages; JSON mode does not validate a JSON Schema.
+
+```javascript
+const result = await ai.createCompletions({
+    model: 'glm-4.7',
+    messages: [{ role: 'user', content: 'Return a JSON object with a greeting field.' }],
+    responseFormat: { type: 'json_object' },
+    stream: false
+});
+console.log(result.choices[0].message.content);
+```
+
+`responseFormat` maps to the API's `response_format` field. Its `type` can be
+`'text'` or `'json_object'`; omitting the option preserves the API default.
+
 #### Streaming Invocation (SSE)
 
 - **Basic Chat**

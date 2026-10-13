@@ -1,4 +1,4 @@
-export { default as ZhipuAI, default } from './zhipu-ai.cjs';
+export { ZhipuAI, ZhipuAI as default } from './zhipu-ai.cjs';
 export { default as Completions } from './capability/completions.cjs';
 export { default as Images } from './capability/images.cjs';
 export { default as Embeddings } from './capability/embeddings.cjs';

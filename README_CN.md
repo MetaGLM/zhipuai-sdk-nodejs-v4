@@ -97,6 +97,25 @@ const dialogue = async () => {
 dialogue();
 ```
 
+#### JSON 模式
+
+对支持 [JSON 模式](https://docs.z.ai/guides/capabilities/struct-output)的文本模型，
+可以设置 `responseFormat: { type: 'json_object' }`。请在消息中描述期望的 JSON；
+JSON 模式不负责校验 JSON Schema。
+
+```javascript
+const result = await ai.createCompletions({
+    model: 'glm-4.7',
+    messages: [{ role: 'user', content: '请返回一个包含 greeting 字段的 JSON 对象。' }],
+    responseFormat: { type: 'json_object' },
+    stream: false
+});
+console.log(result.choices[0].message.content);
+```
+
+`responseFormat` 对应 API 的 `response_format` 字段，`type` 支持 `'text'` 和
+`'json_object'`；省略此选项时沿用 API 默认行为。
+
 #### 流式调用（SSE）
 
 - **基础对话**

@@ -16,7 +16,8 @@
     }
   },
   "scripts": {
-    "build": "tsup lib/** --splitting false --format cjs,esm --sourcemap --dts --clean"
+    "build": "tsup lib/** --splitting false --format cjs,esm --sourcemap --dts --clean",
+    "test": "npm run build && node tests/completions.cjs && tsc --noEmit --strict --skipLibCheck --module NodeNext --moduleResolution NodeNext tests/response-format.types.ts"
   },
   "repository": {
     "url": "https://github.com/winily/zhipuai-sdk-nodejs-v4"

@@ -18,7 +18,9 @@ export type CreateCompletionsOptions = {
     stop?: Array<string>,
     sensitiveWordCheck?: object,
     tools?: object,
-    toolChoice?: string
+    toolChoice?: string,
+    /** Response format for supported text models. Omit to use the API default. */
+    responseFormat?: { type: "text" | "json_object" }
 } & BaseRequestOptions
 
 export type CompletionsResponseMessage = {

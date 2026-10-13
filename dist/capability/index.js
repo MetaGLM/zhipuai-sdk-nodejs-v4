@@ -48,7 +48,8 @@ var Completions = class extends BaseApi {
         "sensitive_word_check": options.sensitiveWordCheck,
         "stream": options.stream,
         "tools": options.tools,
-        "tool_choice": options.toolChoice
+        "tool_choice": options.toolChoice,
+        "response_format": options.responseFormat
       }, {
         headers: options.extraHeaders,
         timeout: options.timeout,

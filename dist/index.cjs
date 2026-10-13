@@ -27,10 +27,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -53,15 +50,15 @@ var __async = (__this, __arguments, generator) => {
 };
 
 // lib/index.ts
-var lib_exports = {};
-__export(lib_exports, {
+var index_exports = {};
+__export(index_exports, {
   Completions: () => Completions,
   Embeddings: () => Embeddings,
   Images: () => Images,
   ZhipuAI: () => zhipu_ai_default,
   default: () => zhipu_ai_default
 });
-module.exports = __toCommonJS(lib_exports);
+module.exports = __toCommonJS(index_exports);
 
 // lib/zhipu-ai.ts
 var import_assert = __toESM(require("assert"), 1);
@@ -165,7 +162,8 @@ var Completions = class extends BaseApi {
         "sensitive_word_check": options.sensitiveWordCheck,
         "stream": options.stream,
         "tools": options.tools,
-        "tool_choice": options.toolChoice
+        "tool_choice": options.toolChoice,
+        "response_format": options.responseFormat
       }, {
         headers: options.extraHeaders,
         timeout: options.timeout,
@@ -260,10 +258,8 @@ var ZhipuAI = class {
       this.apiKey = options.apiKey;
     }
     import_assert.default.ok(this.apiKey, "\u672A\u63D0\u4F9Bapi_key\uFF0C\u8BF7\u901A\u8FC7\u53C2\u6570\u6216\u73AF\u5883\u53D8\u91CF\u63D0\u4F9B");
-    if (!options.baseUrl)
-      options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
-    if (!options.baseUrl)
-      options.baseUrl = "https://open.bigmodel.cn/api/paas/v4";
+    if (!options.baseUrl) options.baseUrl = process.env["ZHIPUAI_BASE_URL"] || "";
+    if (!options.baseUrl) options.baseUrl = "https://open.bigmodel.cn/api/paas/v4";
     options.cacheToken = (_a = options.cacheToken) != null ? _a : true;
     this.request = new Request({
       timeout: options.timeout,
